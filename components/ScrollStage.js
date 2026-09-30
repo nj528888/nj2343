@@ -42,7 +42,10 @@ export default function ScrollStage() {
       const p = clamp(-el.getBoundingClientRect().top / max);
       el.style.setProperty("--p", p.toFixed(4));
       el.style.setProperty("--hero", (1 - ease(clamp(p / 0.45))).toFixed(4));
-      el.style.setProperty("--center", ease(clamp((p - 0.5) / 0.35)).toFixed(4));
+      const center = ease(clamp((p - 0.5) / 0.35));
+      el.style.setProperty("--center", center.toFixed(4));
+      el.dataset.hero = 1 - ease(clamp(p / 0.45)) > 0.05 ? "on" : "off";
+      el.dataset.cta = center > 0.6 ? "on" : "off";
     };
     const onScroll = () => { if (!raf) raf = requestAnimationFrame(update); };
     update();
@@ -56,7 +59,7 @@ export default function ScrollStage() {
   }, []);
 
   return (
-    <section ref={track} className="track" style={{ "--p": 0, "--hero": 1, "--center": 0 }}>
+    <section ref={track} className="track" data-hero="on" data-cta="off" style={{ "--p": 0, "--hero": 1, "--center": 0 }}>
       <div className="stage">
         <div className="glow" aria-hidden="true" />
 
